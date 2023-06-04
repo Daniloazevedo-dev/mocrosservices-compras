@@ -20,6 +20,8 @@ public class Pedido implements Serializable {
 
     private Long id;
 
+    //private String email;
+
     private String nome;
 
     private Long produto;
