@@ -33,6 +33,9 @@ public class Pedido implements Serializable {
     @NotBlank
     private String nome;
 
+    @NotBlank
+    private String email;
+
     @NotNull
     @Min(1)
     private Long produto;
