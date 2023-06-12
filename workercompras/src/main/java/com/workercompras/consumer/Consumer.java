@@ -2,6 +2,7 @@ package com.workercompras.consumer;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.workercompras.model.Pedido;
+import com.workercompras.service.CepService;
 import com.workercompras.service.EmailService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,11 +21,13 @@ public class Consumer {
 
     private final ObjectMapper mapper;
     private final EmailService emailService;
+    private final CepService cepService;
 
     @RabbitListener(queues = {"${queue.name}"})
     public void consumer(@Payload Message message) throws IOException {
         var pedido = mapper.readValue(message.getBody(), Pedido.class);
         log.info("Pedido recebido: {}", pedido);
+        log.info("Consultando CEP: {}", cepService.buscarCep(pedido.getCep()));
         emailService.notificarCliente(pedido.getEmail());
         log.info("Payload: " + pedido);
     }
