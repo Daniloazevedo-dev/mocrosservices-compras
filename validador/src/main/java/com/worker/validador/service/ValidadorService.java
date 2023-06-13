@@ -1,7 +1,7 @@
 package com.worker.validador.service;
 
+import com.worker.validador.model.Cartao;
 import com.worker.validador.model.Pedido;
-import com.workercompras.model.Cartao;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
