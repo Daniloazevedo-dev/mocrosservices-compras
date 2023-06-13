@@ -3,7 +3,6 @@ package com.worker.validador.model;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
-import com.workercompras.model.Cartao;
 import lombok.*;
 
 import java.io.Serializable;
