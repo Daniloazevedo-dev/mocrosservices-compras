@@ -7,6 +7,8 @@ import com.sendgrid.SendGrid;
 import com.sendgrid.helpers.mail.Mail;
 import com.sendgrid.helpers.mail.objects.Content;
 import com.sendgrid.helpers.mail.objects.Email;
+import com.workercompras.model.Pedido;
+import com.workercompras.service.producer.PedidoProducer;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -27,10 +29,14 @@ public class EmailService {
     @Value("${spring.mail.username}")
     private String username;
 
-    public void notificarCliente(String email) {
+    private final PedidoProducer pedidoProducer;
+
+    public void notificarCliente(Pedido pedido) {
 
         try {
-            sendEmail(email);
+            sendEmail(pedido.getEmail());
+            log.info("Preparando pedido consumer...");
+            pedidoProducer.enviarPedido(pedido);
         } catch (Exception e) {
             log.error("Erro ao enviar e-mail: {}", e.getMessage());
             throw new RuntimeException(e.getMessage());

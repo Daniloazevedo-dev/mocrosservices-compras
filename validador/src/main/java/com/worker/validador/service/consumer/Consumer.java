@@ -1,9 +1,8 @@
-package com.workercompras.consumer;
+package com.worker.validador.service.consumer;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.workercompras.model.Pedido;
-import com.workercompras.service.CepService;
-import com.workercompras.service.EmailService;
+import com.worker.validador.model.Pedido;
+import com.worker.validador.service.ValidadorService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.Message;
@@ -20,16 +19,19 @@ import java.io.IOException;
 public class Consumer {
 
     private final ObjectMapper mapper;
-    private final EmailService emailService;
-    private final CepService cepService;
+    private final ValidadorService validadorService;
 
     @RabbitListener(queues = {"${queue.name}"})
     public void consumer(@Payload Message message) throws IOException {
         var pedido = mapper.readValue(message.getBody(), Pedido.class);
-        log.info("Pedido recebido: {}", pedido);
-        log.info("Consultando CEP: {}", cepService.buscarCep(pedido.getCep()));
-        emailService.notificarCliente(pedido.getEmail());
-        log.info("Payload: " + pedido);
+        log.info("Pedido recebido no Validados: {}", pedido);
+
+        try {
+            validadorService.validar(pedido);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
 }
