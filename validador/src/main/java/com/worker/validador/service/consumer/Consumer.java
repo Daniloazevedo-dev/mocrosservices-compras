@@ -3,6 +3,8 @@ package com.worker.validador.service.consumer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.worker.validador.model.Pedido;
 import com.worker.validador.service.ValidadorService;
+import com.worker.validador.service.exceptions.LimiteIndisponivelException;
+import com.worker.validador.service.exceptions.SaldoInsuficienteException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.Message;
@@ -28,7 +30,7 @@ public class Consumer {
 
         try {
             validadorService.validar(pedido);
-        } catch (Exception e) {
+        } catch (LimiteIndisponivelException | SaldoInsuficienteException e) {
             e.printStackTrace();
         }
 
