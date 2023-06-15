@@ -20,4 +20,17 @@ public class DadosMock {
                 .build();
     }
 
+    public Pedido getPedidoSalvo() {
+        return Pedido.builder()
+                .id(1L)
+                .nome("Danilo Azevedo")
+                .produto(1L)
+                .dataCompra(new Date())
+                .cpfCliente("123.456.789-10")
+                .cep("46400000")
+                .email("danilo.ann@gmail.com")
+                .valor(BigDecimal.TEN)
+                .build();
+    }
+
 }
