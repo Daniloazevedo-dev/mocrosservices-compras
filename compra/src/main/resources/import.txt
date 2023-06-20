@@ -1,0 +1,1 @@
+INSERT INTO TB_PEDIDO (id, cep, cpf_cliente, data_compra, email, nome, produto, valor) VALUES (1, '46400-000', '715.095.220-85', '2022-01-01', 'danilo.ann@gmail.com', 'Danilo Azevedo', 1, 1000)

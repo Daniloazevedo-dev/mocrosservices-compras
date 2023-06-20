@@ -3,6 +3,7 @@ package com.mscompra.service;
 import com.mscompra.DadosMock;
 import com.mscompra.model.Pedido;
 import com.mscompra.repository.PedidoRepository;
+import com.mscompra.service.exception.EntidadeNaoEncontradaException;
 import com.mscompra.service.exception.NegocioException;
 import com.mscompra.service.rabbitmq.Producer;
 import org.junit.jupiter.api.DisplayName;
@@ -50,11 +51,11 @@ public class PedidoServiceTest {
     void deveFalharNaBuscaDePedidoNaoExistente() {
         var id = 1L;
 
-        Throwable exception = assertThrows(NegocioException.class, () -> {
+        Throwable exception = assertThrows(EntidadeNaoEncontradaException.class, () -> {
             Pedido pedidoSalvo = pedidoService.buscarOuFalharPorId(id);
         });
 
-        assertEquals(exception.getMessage(), "O Pedido de id : " + id + "não existe na base da dados");
+        assertEquals(exception.getMessage(), "O Pedido de id : " + id + " não existe na base da dados");
 
     }
 
@@ -88,9 +89,9 @@ public class PedidoServiceTest {
         var id = 1L;
         when(pedidoRepository.findById(any(Long.class))).thenReturn(Optional.empty());
 
-        Throwable exception = assertThrows(NegocioException.class, () -> pedidoService.excluir(id));
+        Throwable exception = assertThrows(EntidadeNaoEncontradaException.class, () -> pedidoService.excluir(id));
 
-        assertEquals(exception.getMessage(), "O Pedido de id : " + id + "não existe na base da dados");
+        assertEquals(exception.getMessage(), "O Pedido de id : " + id + " não existe na base da dados");
 
     }
 

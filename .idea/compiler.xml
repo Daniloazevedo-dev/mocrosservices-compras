@@ -9,12 +9,14 @@
         <outputRelativeToContentRoot value="true" />
         <module name="compra" />
         <module name="workercompras" />
+        <module name="validador" />
       </profile>
     </annotationProcessing>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="compra" options="-parameters" />
+      <module name="validador" options="-parameters" />
       <module name="workercompras" options="-parameters" />
     </option>
   </component>

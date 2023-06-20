@@ -1,6 +1,6 @@
 package com.mscompra.service.exception;
 
-public abstract class EntidadeNaoEncontradaException extends NegocioException {
+public class EntidadeNaoEncontradaException extends RuntimeException {
 
     private static final long serialVersionUID = 1L;
 

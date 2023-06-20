@@ -5,10 +5,13 @@ import com.mscompra.CompraApplication;
 import com.mscompra.DadosMock;
 import com.mscompra.model.Pedido;
 import com.mscompra.service.PedidoService;
-import lombok.RequiredArgsConstructor;
+import com.mscompra.service.exception.EntidadeNaoEncontradaException;
+import com.mscompra.service.exception.NegocioException;
+import org.junit.FixMethodOrder;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.runners.MethodSorters;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -17,46 +20,83 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = CompraApplication.class)
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
-@RequiredArgsConstructor(onConstructor = @__(@Autowired))
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class PedidoControllerTest {
 
-    private final MockMvc mockMvc;
+    @Autowired
+    private MockMvc mockMvc;
 
-    private final PedidoService pedidoService;
+    @Autowired
+    private PedidoService pedidoService;
 
-    private final DadosMock dadosMock = new DadosMock();
-
-    private final ObjectMapper mapper;
+    @Autowired
+    private ObjectMapper mapper;
 
     private static final String ROTA_PEDIDO = "/pedido";
 
+    private DadosMock dadosMok = new DadosMock();
+
     @DisplayName("POST - Deve cadastrar um novo pedido com sucesso no banco de dados")
     @Test
-    void deveCadastrarPedidoComSucesso() throws Exception {
-        var pedidoBody = dadosMock.getPedido();
+    void testA() throws Exception {
+        var pedidoBody = dadosMok.getPedido();
         var id = 1L;
 
         mockMvc.perform(post(ROTA_PEDIDO)
-                .content(mapper.writeValueAsString(pedidoBody))
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON))
+                        .content(mapper.writeValueAsString(pedidoBody))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk());
 
-        Pedido pedidoSalvo  = pedidoService.buscarOuFalharPorId(id);
+        Pedido pedidoSalvo = pedidoService.buscarOuFalharPorId(id);
+
         assertEquals(pedidoSalvo.getId(), id);
         assertNotNull(pedidoSalvo);
+    }
+
+    @DisplayName("GET - Deve buscar o pedido com sucesso na base de dados")
+    @Test
+    void testB() throws Exception {
+        var id = 1L;
+
+        mockMvc.perform(get(ROTA_PEDIDO.concat("/" + id)))
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
+
+    @DisplayName("DELETE - Deve excluir um pedido com sucesso")
+    @Test
+    void testC() throws Exception {
+        var id = 1L;
+
+        mockMvc.perform(delete(ROTA_PEDIDO.concat("/" + id)))
+                .andDo(print())
+                .andExpect(status().isNoContent());
+
+        Throwable exception = assertThrows(EntidadeNaoEncontradaException.class, () -> pedidoService.buscarOuFalharPorId(id));
+
+        assertEquals(exception.getMessage(), "O Pedido de id : " + id + " não existe na base da dados");
 
     }
 
+    @DisplayName("GET - Deve falhar ao buscar pedido que não existe")
+    @Test
+    void testD() throws Exception {
+        var id = 2L;
+
+        mockMvc.perform(get(ROTA_PEDIDO.concat("/" + id)))
+                .andDo(print())
+                .andExpect(status().isNotFound());
+    }
 }

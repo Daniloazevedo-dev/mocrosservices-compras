@@ -2,7 +2,7 @@ package com.mscompra.service;
 
 import com.mscompra.model.Pedido;
 import com.mscompra.repository.PedidoRepository;
-import com.mscompra.service.exception.NegocioException;
+import com.mscompra.service.exception.EntidadeNaoEncontradaException;
 import com.mscompra.service.rabbitmq.Producer;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +23,7 @@ public class PedidoService {
 
     public Pedido buscarOuFalharPorId(Long id) {
         return pedidoRepository.findById(id)
-                .orElseThrow(() -> new NegocioException("O Pedido de id : " + id + "não existe na base da dados"));
+                .orElseThrow(() -> new EntidadeNaoEncontradaException("O Pedido de id : " + id + " não existe na base da dados"));
     }
 
     public void excluir(Long id) {
