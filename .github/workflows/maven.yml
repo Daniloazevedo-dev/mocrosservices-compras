@@ -53,29 +53,13 @@ jobs:
     name: Deploy on AWS Elastic Beanstalk
     runs-on: ubuntu-latest
     steps:
-      - name: Download war
-        uses: actions/download-artifact@v2
-        with:
-          name: artifact
-      - name: Deploy to EB
-        uses: einaregilsson/beanstalk-deploy@v15
-        with:
-          aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          use_existing_version_if_available: true
-          wait_for_environment_recovery: 120
-           - name: Create AWS Elastic Beanstalk Application
-             run: |
-               aws elasticbeanstalk create-application \
-              --application-name app-spring-boot
-           - name: Create AWS Elastic Beanstalk Environment
-             run: |
-               aws elasticbeanstalk create-environment \
-                 --application-name app-spring-boot \
-                 --environment-name app-spring-boot-env \
-                 --solution-stack-name "64bit Amazon Linux 2 v5.4.6 running Java 11"
-          application_name: app-spring-boot
-          environment_name: app-spring-boot-env
-          version_label: ${{ github.sha }}
-          region: "us-east-1"
-          deployment_package: app.war
+      - name: Create AWS Elastic Beanstalk Application
+        run: |
+          aws elasticbeanstalk create-application \
+          --application-name app-spring-boot
+      - name: Create AWS Elastic Beanstalk Environment
+        run: |
+          aws elasticbeanstalk create-environment \
+            --application-name app-spring-boot \
+            --environment-name app-spring-boot-env \
+            --solution-stack-name "64bit Amazon Linux 2 v5.4.6 running Java 11"
