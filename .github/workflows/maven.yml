@@ -65,7 +65,17 @@ jobs:
           use_existing_version_if_available: true
           wait_for_environment_recovery: 120
           application_name: app-spring-boot
-          environment_name: App-spring-boot-env
+          environment_name: app-spring-boot-env
           version_label: ${{ github.sha }}
           region: "us-east-1"
           deployment_package: app.war
+      - name: Create AWS Elastic Beanstalk Application
+        run: |
+          aws elasticbeanstalk create-application \
+          --application-name app-spring-boot
+      - name: Create AWS Elastic Beanstalk Environment
+        run: |
+          aws elasticbeanstalk create-environment \
+            --application-name app-spring-boot \
+            --environment-name app-spring-boot-env \
+            --solution-stack-name "64bit Amazon Linux 2 v5.4.6 running Java 11"
