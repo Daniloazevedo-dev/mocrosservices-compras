@@ -64,7 +64,8 @@ jobs:
           aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           use_existing_version_if_available: true
           wait_for_environment_recovery: 120
-      - name: Create AWS Elastic Beanstalk Application
+          version_label: ${{ github.sha }}
+          region: "us-east-1"
         run: |
           aws elasticbeanstalk create-application \
           --application-name app-spring-boot
