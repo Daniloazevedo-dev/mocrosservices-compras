@@ -12,15 +12,15 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
-    - name: Set up JDK 11
-      uses: actions/setup-java@v3
-      with:
-        java-version: '11'
-        distribution: 'temurin'
-        cache: maven
-    - name: Build with Maven
-      run: mvn -B test --file ./compra/pom.xml
+      - uses: actions/checkout@v3
+      - name: Set up JDK 11
+        uses: actions/setup-java@v3
+        with:
+          java-version: '11'
+          distribution: 'temurin'
+          cache: maven
+      - name: Build with Maven
+        run: mvn -B test --file ./compra/pom.xml
 
   build:
     needs: tests
@@ -57,19 +57,25 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: artifact
-      - name: Deploy to EB
+      - name: Set up AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
-          aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          region: "us-east-1"
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: "us-east-1"
+      - name: Create AWS Elastic Beanstalk Application
         run: |
           aws elasticbeanstalk create-application \
-          --application-name app-spring-boot
+            --application-name app-spring-boot
       - name: Create AWS Elastic Beanstalk Environment
         run: |
           aws elasticbeanstalk create-environment \
             --application-name app-spring-boot \
             --environment-name app-spring-boot-env \
             --solution-stack-name "64bit Amazon Linux 2 v5.4.6 running Java 11"
-
+      - name: Deploy to AWS Elastic Beanstalk
+        run: |
+          aws elasticbeanstalk create-environment \
+            --application-name app-spring-boot \
+            --environment-name app-spring-boot-env \
+            --version-label ${{ github.sha }}
