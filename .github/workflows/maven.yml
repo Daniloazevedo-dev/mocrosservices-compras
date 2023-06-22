@@ -68,7 +68,7 @@ jobs:
           aws elasticbeanstalk create-environment \
             --application-name app-spring-boot \
             --environment-name app-spring-boot-env \
-            --solution-stack-name "64bit Amazon Linux 2 v5.4.6 running Corretto 11"
+            --solution-stack-name "Corretto 11 running on 64bit Amazon Linux 2"
       - name: Deploy to AWS Elastic Beanstalk
         run: |
           aws elasticbeanstalk create-environment \
