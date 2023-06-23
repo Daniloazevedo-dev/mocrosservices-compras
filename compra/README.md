@@ -9,5 +9,6 @@
 * Criar instância:
 aws iam create-instance-profile --instance-profile-name EXAMPLEPROFILENAME
 
+
 * Associar ao perfil criado:
 aws iam add-role-to-instance-profile --instance-profile-name EXAMPLEPROFILENAME --role-name EXAMPLEROLENAME
