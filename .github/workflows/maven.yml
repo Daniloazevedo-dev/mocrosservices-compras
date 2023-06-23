@@ -65,7 +65,7 @@ jobs:
           use_existing_version_if_available: true
           wait_for_environment_recovery: 120
           application_name: app-spring-boot
-          environment_name: app-spring-boot-env
+          environment_name: App-spring-boot-env-3
           version_label: ${{ github.sha }}
           region: "us-east-1"
           deployment_package: app.war
